@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>바이브코딩, 같이 잘하기 — 비개발자를 위한 협업 환경 가이드</title>
+<meta name="description" content="개발 지식이 깊지 않아도 괜찮아요. 여러 사람이 AI로 함께 코딩할 때 코드가 엉키지 않게 만드는 협업 환경, 쉬운 비유로 알려드립니다." />
+<meta property="og:title" content="바이브코딩, 같이 잘하기" />
+<meta property="og:description" content="비개발자도 이해되는 AI 협업 환경 셋업 가이드" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0b0d12; --bg2:#11141c; --card:#161a24; --card2:#1c2130;
+    --line:#262c3a; --ink:#f2f4f8; --sub:#aab2c5; --mut:#7b8499;
+    --brand:#6ea8ff; --brand2:#9b8cff; --acc:#5ee0b0; --warn:#ffb86b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Pretendard',system-ui,sans-serif;
+    background:var(--bg); color:var(--ink);
+    line-height:1.65; -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  a{color:inherit;text-decoration:none}
+  .pill{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;
+    padding:7px 14px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(255,255,255,.03);color:var(--sub)}
+
+  /* ===== Nav ===== */
+  nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);
+    background:rgba(11,13,18,.72);border-bottom:1px solid var(--line)}
+  nav .row{display:flex;align-items:center;justify-content:space-between;height:62px}
+  .logo{font-weight:800;font-size:17px;letter-spacing:-.02em;display:flex;align-items:center;gap:9px}
+  .logo .dot{width:11px;height:11px;border-radius:50%;
+    background:linear-gradient(135deg,var(--brand),var(--brand2));box-shadow:0 0 16px var(--brand)}
+  .navlinks{display:flex;gap:26px;font-size:14px;color:var(--sub);font-weight:500}
+  .navlinks a:hover{color:var(--ink)}
+  @media(max-width:720px){.navlinks{display:none}}
+
+  /* ===== Hero ===== */
+  header{position:relative;padding:96px 0 80px;text-align:center;overflow:hidden}
+  header::before{content:"";position:absolute;inset:0;z-index:-1;
+    background:radial-gradient(60% 50% at 50% 0%,rgba(110,168,255,.18),transparent 70%),
+               radial-gradient(40% 40% at 80% 30%,rgba(155,140,255,.14),transparent 70%)}
+  .eyebrow{margin-bottom:22px}
+  h1{font-size:clamp(34px,6vw,60px);font-weight:800;letter-spacing:-.035em;line-height:1.1}
+  h1 .grad{background:linear-gradient(120deg,var(--brand),var(--brand2) 60%,var(--acc));
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .lead{margin:26px auto 0;max-width:600px;font-size:clamp(16px,2.4vw,19px);color:var(--sub)}
+  .cta{margin-top:38px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn{padding:13px 24px;border-radius:12px;font-weight:700;font-size:15px;transition:.18s;cursor:pointer;border:1px solid transparent}
+  .btn-p{background:linear-gradient(120deg,var(--brand),var(--brand2));color:#0b0d12;
+    box-shadow:0 10px 30px -8px rgba(110,168,255,.5)}
+  .btn-p:hover{transform:translateY(-2px);box-shadow:0 16px 38px -8px rgba(110,168,255,.6)}
+  .btn-g{border-color:var(--line);color:var(--ink);background:rgba(255,255,255,.02)}
+  .btn-g:hover{border-color:var(--brand);color:var(--brand)}
+
+  /* ===== Section base ===== */
+  section{padding:72px 0;position:relative}
+  .stag{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--brand)}
+  h2{font-size:clamp(26px,4vw,38px);font-weight:800;letter-spacing:-.03em;margin:12px 0 14px;line-height:1.2}
+  .ssub{color:var(--sub);font-size:16px;max-width:620px}
+  .center{text-align:center}.center .ssub{margin-left:auto;margin-right:auto}
+
+  /* ===== Problem ===== */
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:40px}
+  @media(max-width:680px){.compare{grid-template-columns:1fr}}
+  .panel{border:1px solid var(--line);border-radius:18px;padding:28px;background:var(--card)}
+  .panel.bad{border-color:rgba(255,120,120,.25);background:linear-gradient(180deg,rgba(255,90,90,.06),transparent)}
+  .panel.good{border-color:rgba(94,224,176,.28);background:linear-gradient(180deg,rgba(94,224,176,.07),transparent)}
+  .panel h3{font-size:18px;font-weight:700;display:flex;align-items:center;gap:9px;margin-bottom:16px}
+  .panel ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+  .panel li{display:flex;gap:10px;font-size:14.5px;color:var(--sub)}
+  .panel li b{color:var(--ink);font-weight:600}
+  .mk{flex-shrink:0;font-size:15px;line-height:1.5}
+
+  /* ===== Core 5 cards ===== */
+  .grid5{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:44px}
+  @media(max-width:880px){.grid5{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.grid5{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line);border-radius:18px;padding:26px;background:var(--card);
+    transition:.2s;position:relative;overflow:hidden}
+  .card:hover{transform:translateY(-4px);border-color:#34405a;background:var(--card2)}
+  .card .num{position:absolute;top:18px;right:22px;font-size:42px;font-weight:800;color:rgba(255,255,255,.05)}
+  .ico{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;font-size:24px;margin-bottom:18px;
+    background:rgba(110,168,255,.12);border:1px solid rgba(110,168,255,.2)}
+  .card h3{font-size:18px;font-weight:700;margin-bottom:4px}
+  .card .meta{font-size:12.5px;color:var(--brand);font-weight:600;margin-bottom:12px}
+  .card p{font-size:14px;color:var(--sub)}
+  .card .tip{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--mut)}
+  .card .tip b{color:var(--acc);font-weight:600}
+
+  /* ===== Checklist ===== */
+  .check{margin-top:40px;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:var(--card)}
+  .step{display:flex;gap:18px;padding:24px 26px;border-bottom:1px solid var(--line);transition:.15s}
+  .step:last-child{border-bottom:none}
+  .step:hover{background:var(--card2)}
+  .step .n{flex-shrink:0;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;
+    font-weight:800;font-size:15px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#0b0d12}
+  .step h4{font-size:16px;font-weight:700;margin-bottom:4px}
+  .step p{font-size:14px;color:var(--sub)}
+  .step code{font-family:ui-monospace,monospace;font-size:12.5px;background:#0b0d12;
+    border:1px solid var(--line);padding:2px 7px;border-radius:6px;color:var(--acc)}
+
+  /* ===== Tools ===== */
+  .tools{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:40px}
+  @media(max-width:680px){.tools{grid-template-columns:1fr}}
+  .tool{display:flex;gap:15px;align-items:flex-start;border:1px solid var(--line);border-radius:14px;padding:20px;background:var(--card)}
+  .tool .te{font-size:26px;flex-shrink:0}
+  .tool h4{font-size:15.5px;font-weight:700;margin-bottom:3px}
+  .tool p{font-size:13.5px;color:var(--sub)}
+  .tool .tag{font-size:11px;color:var(--mut);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+
+  /* ===== Closing ===== */
+  .close{text-align:center;border:1px solid var(--line);border-radius:24px;padding:56px 28px;margin-top:20px;
+    background:radial-gradient(70% 100% at 50% 0%,rgba(110,168,255,.12),transparent 70%),var(--card)}
+  .close h2{margin-bottom:10px}
+  .quote{font-size:clamp(20px,3.4vw,30px);font-weight:800;letter-spacing:-.02em;line-height:1.35;max-width:680px;margin:0 auto}
+  .quote .grad{background:linear-gradient(120deg,var(--brand),var(--acc));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  footer{padding:48px 0 60px;text-align:center;color:var(--mut);font-size:13px;border-top:1px solid var(--line)}
+
+  /* ===== Git section ===== */
+  .gitintro{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:36px}
+  @media(max-width:680px){.gitintro{grid-template-columns:1fr}}
+  .gi{border:1px solid var(--line);border-radius:14px;padding:20px;background:var(--card);text-align:center}
+  .gi .e{font-size:30px;margin-bottom:10px}
+  .gi h4{font-size:15px;font-weight:700;margin-bottom:5px}
+  .gi p{font-size:13.5px;color:var(--sub)}
+
+  .flow{margin-top:40px;display:flex;flex-direction:column;gap:14px}
+  .ga{border:1px solid var(--line);border-radius:18px;background:var(--card);overflow:hidden;transition:.18s}
+  .ga:hover{border-color:#34405a}
+  .ga .head{display:flex;align-items:center;gap:16px;padding:22px 24px}
+  .ga .badge{flex-shrink:0;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:22px;
+    background:rgba(110,168,255,.12);border:1px solid rgba(110,168,255,.22)}
+  .ga .htext{flex:1;min-width:0}
+  .ga .htext h4{font-size:17px;font-weight:700;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .ga .htext h4 .like{font-size:13px;font-weight:600;color:var(--brand)}
+  .ga .htext p{font-size:14px;color:var(--sub);margin-top:3px}
+  .ga .body{padding:0 24px 22px 82px}
+  @media(max-width:560px){.ga .body{padding:0 20px 20px}}
+  .cmd{display:flex;align-items:center;gap:10px;background:#0a0c11;border:1px solid var(--line);
+    border-radius:10px;padding:11px 14px;font-family:ui-monospace,monospace;font-size:13px;margin-bottom:12px;overflow-x:auto}
+  .cmd .dollar{color:var(--mut);user-select:none}
+  .cmd code{color:var(--acc);white-space:nowrap}
+  .ga .what{font-size:13.5px;color:var(--mut);display:flex;gap:8px}
+  .ga .what b{color:var(--ink);font-weight:600}
+  .ga .what .ar{color:var(--brand)}
+  .saytip{margin-top:14px;font-size:13px;color:var(--sub);background:rgba(94,224,176,.07);
+    border:1px solid rgba(94,224,176,.18);border-radius:10px;padding:11px 14px}
+  .saytip b{color:var(--acc)}
+
+  .gnote{margin-top:36px;border:1px solid rgba(255,184,107,.25);background:linear-gradient(180deg,rgba(255,184,107,.07),transparent);
+    border-radius:16px;padding:22px 24px}
+  .gnote h4{font-size:15px;font-weight:700;margin-bottom:8px;color:var(--warn)}
+  .gnote ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .gnote li{font-size:14px;color:var(--sub);display:flex;gap:9px}
+  .gnote li b{color:var(--ink);font-weight:600}
+
+  /* reveal */
+  .rv{opacity:0;transform:translateY(24px);transition:.6s cubic-bezier(.2,.7,.3,1)}
+  .rv.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap row">
+    <div class="logo"><span class="dot"></span>바이브코딩 협업 가이드</div>
+    <div class="navlinks">
+      <a href="#why">왜 필요한가</a>
+      <a href="#core">핵심 5가지</a>
+      <a href="#git">Git 자세히</a>
+      <a href="#steps">따라하기</a>
+      <a href="#tools">도구</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow"><span class="pill">👋 개발 지식이 깊지 않아도 OK</span></div>
+    <h1>혼자 하던 바이브코딩,<br><span class="grad">이제 같이 잘하기</span></h1>
+    <p class="lead">여러 사람이 AI로 함께 코딩하면 코드가 금방 엉켜요.
+      "누가 와도 똑같이 일할 수 있는 환경"을 만드는 5가지 방법을, 어려운 용어 없이 비유로 알려드립니다.</p>
+    <div class="cta">
+      <a href="#core" class="btn btn-p">핵심 5가지 보기</a>
+      <a href="#steps" class="btn btn-g">바로 따라하기 →</a>
+    </div>
+  </div>
+</header>
+
+<!-- WHY -->
+<section id="why">
+  <div class="wrap">
+    <div class="rv">
+      <div class="stag">왜 필요한가</div>
+      <h2>"내 컴퓨터에선 됐는데…"가 반복되는 이유</h2>
+      <p class="ssub">바이브코딩은 혼자 할 땐 빠르고 편해요. 하지만 둘 이상이 각자 AI에게
+        다른 방식으로 지시하면, 코드가 서로 부딪히고 누가 뭘 바꿨는지 알 수 없게 됩니다.</p>
+    </div>
+    <div class="compare">
+      <div class="panel bad rv">
+        <h3>😵 환경이 없으면</h3>
+        <ul>
+          <li><span class="mk">❌</span><span><b>제각각</b> — 사람마다 AI에게 다른 규칙을 알려줘 코드 스타일이 뒤죽박죽</span></li>
+          <li><span class="mk">❌</span><span><b>되돌리기 불가</b> — 뭔가 망가져도 어디서부터 잘못됐는지 못 찾음</span></li>
+          <li><span class="mk">❌</span><span><b>"내 컴에선 됨"</b> — 옆 사람 컴퓨터에선 안 돌아감</span></li>
+          <li><span class="mk">❌</span><span><b>비밀번호 유출</b> — API 키가 그대로 공유돼 사고로 이어짐</span></li>
+        </ul>
+      </div>
+      <div class="panel good rv">
+        <h3>😎 환경을 갖추면</h3>
+        <ul>
+          <li><span class="mk">✅</span><span><b>한 규칙</b> — AI가 모두에게 똑같은 약속대로 코드를 작성</span></li>
+          <li><span class="mk">✅</span><span><b>언제든 복구</b> — 잘못돼도 이전 상태로 한 번에 되돌리기</span></li>
+          <li><span class="mk">✅</span><span><b>어디서든 동일</b> — 누구 컴퓨터에서도 똑같이 작동</span></li>
+          <li><span class="mk">✅</span><span><b>안전한 비밀</b> — 중요한 키는 절대 새어 나가지 않음</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CORE 5 -->
+<section id="core" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="rv center">
+      <div class="stag">핵심 5가지</div>
+      <h2>딱 5개만 챙기면 됩니다</h2>
+      <p class="ssub">전부 일상적인 비유로 설명할게요. 기술보다 "왜 하는지"를 이해하는 게 먼저예요.</p>
+    </div>
+    <div class="grid5">
+      <div class="card rv">
+        <span class="num">1</span>
+        <div class="ico">📄</div>
+        <h3>공유 컨텍스트</h3>
+        <div class="meta">= AI 사용설명서</div>
+        <p>"우리 프로젝트는 이런 규칙으로 만든다"를 적은 문서 한 장을 모두가 공유해요. AI가 이걸 먼저 읽고 일관되게 코딩합니다.</p>
+        <div class="tip">📌 <b>CLAUDE.md</b> 파일에 규칙·폴더구조·하지 말 것을 적어두기</div>
+      </div>
+      <div class="card rv">
+        <span class="num">2</span>
+        <div class="ico">💾</div>
+        <h3>버전관리</h3>
+        <div class="meta">= 저장 + 되돌리기</div>
+        <p>게임의 세이브 포인트처럼, 작업을 단계마다 저장해요. 망가져도 되돌릴 수 있고, 누가 무엇을 바꿨는지 다 남습니다.</p>
+        <div class="tip">📌 <b>Git</b> 사용 + 작은 단위로 자주 저장(커밋)하기</div>
+      </div>
+      <div class="card rv">
+        <span class="num">3</span>
+        <div class="ico">🧰</div>
+        <h3>환경 재현성</h3>
+        <div class="meta">= 똑같은 작업대</div>
+        <p>요리 레시피처럼 "필요한 재료 목록"을 함께 둬요. 그러면 누구 컴퓨터에서든 똑같은 환경이 자동으로 차려집니다.</p>
+        <div class="tip">📌 <b>.env.example</b> 와 의존성 목록을 함께 공유하기</div>
+      </div>
+      <div class="card rv">
+        <span class="num">4</span>
+        <div class="ico">🤝</div>
+        <h3>규칙 통일</h3>
+        <div class="meta">= 팀 약속 정하기</div>
+        <p>이름 짓는 법, 폴더 나누는 법을 미리 약속해요. 매번 AI에게 다시 설명 안 해도 일관된 결과가 나옵니다.</p>
+        <div class="tip">📌 <b>컨벤션 문서</b> 1장으로 네이밍·구조 고정하기</div>
+      </div>
+      <div class="card rv">
+        <span class="num">5</span>
+        <div class="ico">🔑</div>
+        <h3>시크릿 관리</h3>
+        <div class="meta">= 비밀번호 안 흘리기</div>
+        <p>API 키 같은 비밀은 집 열쇠와 같아요. 코드에 그대로 넣어 공유하면 사고로 이어집니다. 따로 안전하게 관리해요.</p>
+        <div class="tip">📌 비밀 키는 <b>절대 git에 올리지 않기</b> (.gitignore 활용)</div>
+      </div>
+      <div class="card rv" style="background:linear-gradient(160deg,rgba(110,168,255,.1),rgba(155,140,255,.06));border-color:rgba(110,168,255,.25)">
+        <span class="num">★</span>
+        <div class="ico" style="background:rgba(94,224,176,.14);border-color:rgba(94,224,176,.25)">🎯</div>
+        <h3>한 줄 요약</h3>
+        <div class="meta" style="color:var(--acc)">기억할 단 하나</div>
+        <p style="color:var(--ink);font-weight:600">"사람 온보딩 문서 = AI 온보딩 문서."<br>레포만 받으면 사람이든 AI든 같은 규칙으로 일하게 만들면 끝!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GIT DETAIL -->
+<section id="git">
+  <div class="wrap">
+    <div class="rv">
+      <div class="stag">Git 자세히</div>
+      <h2>Git, 처음이어도 괜찮아요 — 절차별 설명</h2>
+      <p class="ssub">Git은 어렵게 느껴지지만, 사실 "저장하고 → 공유하는" 반복일 뿐이에요.
+        먼저 큰 그림 3가지를 잡고, 실제 동작을 하나씩 따라가 볼게요.</p>
+    </div>
+
+    <!-- big picture -->
+    <div class="gitintro">
+      <div class="gi rv"><div class="e">📸</div><h4>Git이 뭔가요?</h4>
+        <p>작업의 순간을 사진처럼 찍어 보관하는 "타임머신"이에요. 언제든 그 시점으로 돌아갈 수 있죠.</p></div>
+      <div class="gi rv"><div class="e">💻</div><h4>내 컴퓨터 (로컬)</h4>
+        <p>내가 직접 작업하고 저장하는 공간. 여기서 찍은 사진은 아직 나만 가지고 있어요.</p></div>
+      <div class="gi rv"><div class="e">☁️</div><h4>인터넷 저장소 (GitHub)</h4>
+        <p>찍은 사진을 올려 팀과 함께 보는 공용 앨범. 여기 올려야 비로소 "공유"가 됩니다.</p></div>
+    </div>
+
+    <!-- step by step actions -->
+    <div class="flow">
+
+      <div class="ga rv">
+        <div class="head">
+          <div class="badge">🏁</div>
+          <div class="htext">
+            <h4>1. 시작하기 <span class="like">📦 새 상자 열기 / 기존 상자 받기</span></h4>
+            <p>작업을 Git으로 관리하겠다고 첫 선언을 하거나, 팀의 기존 프로젝트를 통째로 내려받아요.</p>
+          </div>
+        </div>
+        <div class="body">
+          <div class="cmd"><span class="dollar">$</span><code>git init</code></div>
+          <div class="what"><span class="ar">→</span><span><b>새로 시작</b>할 때. 이 폴더를 "타임머신이 작동하는 폴더"로 만들어요.</span></div>
+          <div class="cmd" style="margin-top:12px"><span class="dollar">$</span><code>git clone &lt;주소&gt;</code></div>
+          <div class="what"><span class="ar">→</span><span>팀에 <b>이미 있는</b> 프로젝트를 내 컴퓨터로 통째로 복사해 와요.</span></div>
+          <div class="saytip">💬 AI에게 이렇게: <b>"이 폴더를 git 저장소로 시작해줘"</b> 라고만 해도 됩니다.</div>
+        </div>
+      </div>
+
+      <div class="ga rv">
+        <div class="head">
+          <div class="badge">🔍</div>
+          <div class="htext">
+            <h4>2. 무엇이 바뀌었나 보기 <span class="like">🧐 달라진 점 확인</span></h4>
+            <p>내가 지금까지 어떤 파일을 만들고 고쳤는지 한눈에 확인해요. 저장 전 점검 단계입니다.</p>
+          </div>
+        </div>
+        <div class="body">
+          <div class="cmd"><span class="dollar">$</span><code>git status</code></div>
+          <div class="what"><span class="ar">→</span><span>"이 파일들이 새로 바뀌었어요"라고 <b>목록을 보여줘요.</b> 자주 봐도 안전합니다.</span></div>
+          <div class="saytip">💡 헷갈리면 언제든 이걸 먼저 보세요. 아무것도 망가뜨리지 않는 "그냥 보기" 명령이에요.</div>
+        </div>
+      </div>
+
+      <div class="ga rv">
+        <div class="head">
+          <div class="badge">🛒</div>
+          <div class="htext">
+            <h4>3. 저장할 것 담기 <span class="like">🛒 장바구니에 담기</span></h4>
+            <p>바뀐 파일 중 "이번에 저장할 것들"만 골라 장바구니(스테이징)에 담아요.</p>
+          </div>
+        </div>
+        <div class="body">
+          <div class="cmd"><span class="dollar">$</span><code>git add .</code></div>
+          <div class="what"><span class="ar">→</span><span>점(.)은 "바뀐 것 <b>전부</b> 담기". 보통은 이걸 쓰면 됩니다.</span></div>
+          <div class="saytip">💬 비유: 마트에서 계산(저장) 전에 살 물건을 카트에 담는 단계예요.</div>
+        </div>
+      </div>
+
+      <div class="ga rv">
+        <div class="head">
+          <div class="badge">💾</div>
+          <div class="htext">
+            <h4>4. 저장하기 (커밋) <span class="like">📸 사진 찍어 보관</span></h4>
+            <p>담은 것을 "한 시점"으로 확정 저장하고, 무엇을 했는지 한 줄 메모를 남겨요.</p>
+          </div>
+        </div>
+        <div class="body">
+          <div class="cmd"><span class="dollar">$</span><code>git commit -m "로그인 화면 추가"</code></div>
+          <div class="what"><span class="ar">→</span><span>따옴표 안 메모는 <b>"이번에 뭘 했는지"</b>. 나중에 되돌릴 때 이정표가 돼요.</span></div>
+          <div class="saytip">💡 팁: 메모는 짧고 구체적으로. "수정함"❌ → <b>"가격 계산 오류 고침"</b>✅ 처럼요.</div>
+        </div>
+      </div>
+
+      <div class="ga rv">
+        <div class="head">
+          <div class="badge">⬆️</div>
+          <div class="htext">
+            <h4>5. 인터넷에 올리기 (푸시) <span class="like">☁️ 공용 앨범에 업로드</span></h4>
+            <p>내 컴퓨터에 저장한 사진들을 인터넷 저장소(GitHub)에 올려 팀과 공유해요.</p>
+          </div>
+        </div>
+        <div class="body">
+          <div class="cmd"><span class="dollar">$</span><code>git push</code></div>
+          <div class="what"><span class="ar">→</span><span>이제야 팀원도 내 작업을 볼 수 있어요. <b>올리기 전엔 나만</b> 가지고 있는 상태.</span></div>
+          <div class="saytip">💬 비유: 사진을 찍어두기만(커밋) 한 것과, 단톡방에 올리는 것(푸시)의 차이예요.</div>
+        </div>
+      </div>
+
+      <div class="ga rv">
+        <div class="head">
+          <div class="badge">⬇️</div>
+          <div class="htext">
+            <h4>6. 최신 받기 (풀) <span class="like">🔄 남이 올린 것 받기</span></h4>
+            <p>팀원이 올린 최신 변경을 내 컴퓨터로 받아와요. 작업 시작 전에 습관처럼 하면 좋아요.</p>
+          </div>
+        </div>
+        <div class="body">
+          <div class="cmd"><span class="dollar">$</span><code>git pull</code></div>
+          <div class="what"><span class="ar">→</span><span>공용 앨범의 <b>최신 상태로 내 폴더를 갱신.</b> 안 받고 작업하면 나중에 충돌이 생겨요.</span></div>
+          <div class="saytip">💡 황금 습관: <b>작업 시작 = pull 먼저</b>, 작업 끝 = add → commit → push.</div>
+        </div>
+      </div>
+
+      <div class="ga rv">
+        <div class="head">
+          <div class="badge">🌿</div>
+          <div class="htext">
+            <h4>7. 안전한 실험 공간 (브랜치) <span class="like">🌿 복사본에서 작업</span></h4>
+            <p>원본을 건드리지 않고, 복사한 가지(branch)에서 자유롭게 새 기능을 시도해요.</p>
+          </div>
+        </div>
+        <div class="body">
+          <div class="cmd"><span class="dollar">$</span><code>git switch -c 새기능</code></div>
+          <div class="what"><span class="ar">→</span><span>"새기능"이라는 <b>안전한 평행 세계</b>를 만들어 그리로 이동. 망쳐도 원본은 멀쩡해요.</span></div>
+          <div class="saytip">💬 비유: 문서를 "다른 이름으로 저장"해 사본에서 마음껏 고치는 것과 같아요.</div>
+        </div>
+      </div>
+
+      <div class="ga rv">
+        <div class="head">
+          <div class="badge">🤝</div>
+          <div class="htext">
+            <h4>8. 검토 후 합치기 (PR / 머지) <span class="like">✅ 확인받고 합류</span></h4>
+            <p>가지에서 한 작업을 원본에 합쳐요. 합치기 전에 팀원(또는 나)이 한 번 검토합니다.</p>
+          </div>
+        </div>
+        <div class="body">
+          <div class="what"><span class="ar">→</span><span>GitHub에서 <b>"Pull Request"</b> 버튼으로 검토 요청 → 확인되면 합치기(Merge) 클릭.</span></div>
+          <div class="saytip">💡 핵심: AI가 짠 코드라도 <b>합치기 전 한 번 훑어보기.</b> "돌아가니까 합치기"는 금물이에요.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- safety note -->
+    <div class="gnote rv">
+      <h4>⚠️ 비개발자가 꼭 기억할 3가지</h4>
+      <ul>
+        <li><span>1.</span><span><b>git status는 안전합니다.</b> 그냥 보는 명령이라 아무리 눌러도 망가지지 않아요. 헷갈리면 먼저 누르세요.</span></li>
+        <li><span>2.</span><span><b>자주 저장(커밋)하세요.</b> 작게 자주 저장할수록 문제가 생겨도 되돌리기 쉬워요.</span></li>
+        <li><span>3.</span><span><b>막히면 AI에게 그대로 물어보세요.</b> "git에서 이런 에러가 났어, 어떻게 해?"라고 화면을 복붙하면 됩니다.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- STEPS -->
+<section id="steps">
+  <div class="wrap">
+    <div class="rv">
+      <div class="stag">따라하기</div>
+      <h2>오늘 바로 할 수 있는 체크리스트</h2>
+      <p class="ssub">순서대로 하나씩만 하면 됩니다. 어려운 명령어는 AI에게 "이거 해줘"라고 부탁해도 돼요.</p>
+    </div>
+    <div class="check">
+      <div class="step rv"><div class="n">1</div><div>
+        <h4>프로젝트 폴더를 Git으로 시작하기</h4>
+        <p>작업을 저장하고 되돌릴 수 있게 첫 단추를 끼워요. AI에게 <code>git 저장소 만들어줘</code> 라고 해도 됩니다.</p>
+      </div></div>
+      <div class="step rv"><div class="n">2</div><div>
+        <h4>AI 사용설명서(CLAUDE.md) 적기</h4>
+        <p>프로젝트 목표, 폴더 구조, "이렇게 해줘 / 이건 하지 마"를 자유롭게 적어요. 팀원 모두가 같이 봅니다.</p>
+      </div></div>
+      <div class="step rv"><div class="n">3</div><div>
+        <h4>비밀 키는 따로 빼두기</h4>
+        <p>API 키 등은 <code>.env</code> 에 넣고, 예시용 빈 양식인 <code>.env.example</code>만 공유해요. <code>.gitignore</code>로 진짜 키는 가립니다.</p>
+      </div></div>
+      <div class="step rv"><div class="n">4</div><div>
+        <h4>팀 약속(컨벤션) 한 장 만들기</h4>
+        <p>이름 규칙, 폴더 나누는 법을 짧게 정리. 길 필요 없어요 — 반쪽짜리라도 있으면 일관성이 확 올라갑니다.</p>
+      </div></div>
+      <div class="step rv"><div class="n">5</div><div>
+        <h4>변경은 "리뷰 후 합치기"</h4>
+        <p>AI가 짠 코드도 사람이 한 번 훑어보고 합쳐요. "돌아가니까 그냥 합치기"는 나중에 사고의 씨앗이 됩니다.</p>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section id="tools" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="rv">
+      <div class="stag">추천 도구</div>
+      <h2>이런 도구들이 도와줍니다</h2>
+      <p class="ssub">전부 쓸 필요 없어요. 이름만 알아둬도 AI와 대화할 때 훨씬 수월해집니다.</p>
+    </div>
+    <div class="tools">
+      <div class="tool rv"><div class="te">🌳</div><div>
+        <span class="tag">버전관리</span>
+        <h4>Git &amp; GitHub</h4>
+        <p>작업 저장·되돌리기·함께 공유의 기본. 협업의 토대가 되는 가장 중요한 도구예요.</p>
+      </div></div>
+      <div class="tool rv"><div class="te">🤖</div><div>
+        <span class="tag">AI 코딩</span>
+        <h4>Claude Code / Cursor</h4>
+        <p>AI에게 말로 시켜 코드를 만드는 도구. 설명서(CLAUDE.md)를 읽고 규칙대로 작성해줍니다.</p>
+      </div></div>
+      <div class="tool rv"><div class="te">🔐</div><div>
+        <span class="tag">비밀 관리</span>
+        <h4>.env 파일</h4>
+        <p>API 키 같은 민감 정보를 코드와 분리해 보관. 공유는 빈 양식(.env.example)만 합니다.</p>
+      </div></div>
+      <div class="tool rv"><div class="te">🚀</div><div>
+        <span class="tag">배포</span>
+        <h4>Vercel / Netlify</h4>
+        <p>만든 사이트를 인터넷에 공개하는 도구. 클릭 몇 번이면 URL이 생겨 누구든 볼 수 있어요.</p>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSE -->
+<section>
+  <div class="wrap">
+    <div class="close rv">
+      <div class="stag">마무리</div>
+      <p class="quote">"레포만 클론하면 누구든<br><span class="grad">같은 규칙으로 일하게."</span></p>
+      <p class="ssub" style="margin:22px auto 0">이 한 문장만 기억하세요. 사람을 새로 맞이하는 준비가
+        그대로 AI를 맞이하는 준비가 됩니다. 거창할 필요 없이, 오늘 위 체크리스트 1번부터 시작해 보세요.</p>
+      <div class="cta" style="margin-top:30px">
+        <a href="#core" class="btn btn-p">핵심 5가지 다시 보기</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    바이브코딩 협업 환경 가이드 · 비개발자를 위한 쉬운 안내<br>
+    <span style="opacity:.6">Made with Claude Code</span>
+  </div>
+</footer>
+
+<script>
+  const io=new IntersectionObserver((es)=>{
+    es.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('in'),i*60);io.unobserve(e.target)}})
+  },{threshold:.12});
+  document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
