@@ -162,6 +162,17 @@
   .gnote li{font-size:14px;color:var(--sub);display:flex;gap:9px}
   .gnote li b{color:var(--ink);font-weight:600}
 
+  /* ===== Figures (illustrations) ===== */
+  .figfull{margin-top:42px;border-radius:20px;overflow:hidden;border:1px solid var(--line);
+    background:var(--card);box-shadow:0 30px 80px -34px rgba(110,168,255,.3)}
+  .figfull img{width:100%;display:block;aspect-ratio:3/2;object-fit:cover}
+  .figcap{font-size:12.5px;color:var(--mut);text-align:center;margin-top:13px;letter-spacing:-.01em}
+  .hero-art{max-width:860px;margin:54px auto 0;border-radius:22px;overflow:hidden;position:relative;
+    border:1px solid var(--line);box-shadow:0 44px 120px -44px rgba(110,168,255,.5)}
+  .hero-art img{width:100%;display:block;aspect-ratio:3/2;object-fit:cover}
+  .hero-art::after{content:"";position:absolute;inset:0;pointer-events:none;
+    box-shadow:inset 0 -70px 90px -50px rgba(11,13,18,.75)}
+
   /* reveal */
   .rv{opacity:0;transform:translateY(24px);transition:.6s cubic-bezier(.2,.7,.3,1)}
   .rv.in{opacity:1;transform:none}
@@ -192,6 +203,9 @@
       <a href="#core" class="btn btn-p">핵심 5가지 보기</a>
       <a href="#steps" class="btn btn-g">바로 따라하기 →</a>
     </div>
+    <figure class="hero-art rv">
+      <img src="assets/hero.webp" alt="팀과 AI가 같은 코드를 보며 함께 협업하는 모습" loading="eager" width="1536" height="1024" />
+    </figure>
   </div>
 </header>
 
@@ -204,6 +218,10 @@
       <p class="ssub">바이브코딩은 혼자 할 땐 빠르고 편해요. 하지만 둘 이상이 각자 AI에게
         다른 방식으로 지시하면, 코드가 서로 부딪히고 누가 뭘 바꿨는지 알 수 없게 됩니다.</p>
     </div>
+    <figure class="figfull rv">
+      <img src="assets/why.webp" alt="협업 환경이 없을 때의 혼란과 갖췄을 때의 정돈을 대비한 일러스트" loading="lazy" width="1536" height="1024" />
+    </figure>
+    <p class="figcap rv">환경이 없으면 코드가 엉키고, 갖추면 모두가 같은 결로 정돈됩니다.</p>
     <div class="compare">
       <div class="panel bad rv">
         <h3>😵 환경이 없으면</h3>
@@ -306,6 +324,11 @@
       <div class="gi rv"><div class="e">☁️</div><h4>인터넷 저장소 (GitHub)</h4>
         <p>찍은 사진을 올려 팀과 함께 보는 공용 앨범. 여기 올려야 비로소 "공유"가 됩니다.</p></div>
     </div>
+
+    <figure class="figfull rv">
+      <img src="assets/git.webp" alt="Git을 세이브 포인트 타임라인으로 표현하고 브랜치가 갈라졌다 합쳐지는 일러스트" loading="lazy" width="1536" height="1024" />
+    </figure>
+    <p class="figcap rv">Git은 작업의 순간들을 점점이 저장하는 타임라인 — 가지(branch)를 쳐서 안전하게 실험하고 다시 합칩니다.</p>
 
     <!-- step by step actions -->
     <div class="flow">
@@ -515,6 +538,9 @@
 <section>
   <div class="wrap">
     <div class="close rv">
+      <figure class="figfull" style="margin:0 auto 30px;max-width:680px;border:none;box-shadow:none;background:transparent">
+        <img src="assets/closing.webp" alt="하나의 공유 레포에서 사람과 AI가 모두 같은 규칙으로 정렬되어 일하는 일러스트" loading="lazy" width="1536" height="1024" style="border-radius:18px;border:1px solid var(--line)" />
+      </figure>
       <div class="stag">마무리</div>
       <p class="quote">"레포만 클론하면 누구든<br><span class="grad">같은 규칙으로 일하게."</span></p>
       <p class="ssub" style="margin:22px auto 0">이 한 문장만 기억하세요. 사람을 새로 맞이하는 준비가
